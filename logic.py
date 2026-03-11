@@ -1,3 +1,6 @@
+import pandas as pd
+
+
 class Questions:
     def __init__(self):
         self.total = []
@@ -17,7 +20,6 @@ class Question:
 with open("questions.txt", "r") as raw_file:
     bulk = raw_file.read()
     questions = Questions()
-
     for question_text in bulk.split("\n"):
         if question_text == "":
             continue
@@ -45,4 +47,21 @@ def mainloop(question_bank):
                 answer = input("0 ile 5 arasinda bir deger girin: ")
 
 
+def compute_results(all_questions):
+    total = 0
+    data = dict()
+    for question in all_questions:
+        total += question.user_answer
+        data[question.text] = question.user_answer
+    
+    return data
+
 mainloop(questions.total)
+
+data = compute_results(questions.total)
+
+dataframe = pd.DataFrame(data, index=["file-start"])
+
+dataframe = dataframe.transpose()
+
+dataframe.to_csv("answers.csv")
